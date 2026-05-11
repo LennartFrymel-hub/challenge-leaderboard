@@ -16,3 +16,6 @@ teams:
   - id: team_fabinalii
     display_name: "Team Fabinalii"
     github_handles: [akiev, feith, zakharuk]
+  - id: team_4
+    display_name: "Team 4"
+    github_handles: [tbb]
