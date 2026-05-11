@@ -1,0 +1,9 @@
+# Team-Registry der Live-Lastprognose-Challenge.
+# Schema:
+#   teams:
+#     - id: <filename-safe, lowercase>     # erscheint im Pfad submissions/<id>/...
+#       display_name: <freier String>      # erscheint im Leaderboard
+#       github_handles: [<gh-handle>, ...] # darf PRs mergen
+#
+# Lehrende pflegen diese Datei manuell nach Eingang der Anmeldung.
+teams: []

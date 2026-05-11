@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+.uv-cache/
+.pytest_cache/
+.DS_Store
+*.swp
+
+# Build-Artefakte des Leaderboards (werden in jeder Pipeline neu erzeugt)
+public/index.html
+public/data/scores.json

@@ -1,0 +1,55 @@
+name: Validate Submission PR
+
+on:
+  pull_request:
+    paths:
+      - "submissions/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Diff prüfen (genau eine CSV pro PR)
+        id: diff
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          mapfile -t CHANGED < <(git diff --name-only --diff-filter=AM "$BASE_SHA" "$HEAD_SHA" -- 'submissions/**')
+          if [[ ${#CHANGED[@]} -ne 1 ]]; then
+            echo "::error::PR muss genau eine Submission ändern oder hinzufügen (gefunden: ${#CHANGED[@]})."
+            printf '%s\n' "${CHANGED[@]}" >&2
+            exit 1
+          fi
+          echo "path=${CHANGED[0]}" >> "$GITHUB_OUTPUT"
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Python-Stack
+        run: uv sync --frozen
+
+      - name: Submission validieren
+        env:
+          PYTHONHASHSEED: "0"
+        run: |
+          uv run python scripts/validate_submission.py \
+            --path "${{ steps.diff.outputs.path }}" \
+            --teams teams.yml \
+            --pr-author "${{ github.event.pull_request.user.login }}"
+
+      - name: Auto-merge aktivieren
+        if: success()
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: squash

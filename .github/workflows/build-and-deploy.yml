@@ -1,0 +1,54 @@
+name: Build & Deploy Leaderboard
+
+on:
+  workflow_run:
+    workflows: ["Daily Scoring"]
+    types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - "data/scores.parquet"
+      - "teams.yml"
+      - "templates/leaderboard.html.j2"
+      - "scripts/build_leaderboard.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Python-Stack
+        run: uv sync --frozen
+
+      - name: Leaderboard rendern
+        run: uv run python scripts/build_leaderboard.py
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
