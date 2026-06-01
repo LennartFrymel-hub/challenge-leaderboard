@@ -43,3 +43,10 @@ teams:
   - id: team_immerzuspaet
     display_name: "Team ImmerZuSpaet"
     github_handles: [LennartFrymel-hub, abdulwahabtibi1989-hub, MSamed, fan20251230, steinbrechm]
+  - id: team_weather_report
+    display_name: "Team Weather Report"
+    github_handles: [LaloMohamad, yanickfotsing]
+  - id: Voltrion
+    display_name: "Voltrion"
+    github_handles: [Malakamz, RoyalKnighter, DarkReaperGT]
+
