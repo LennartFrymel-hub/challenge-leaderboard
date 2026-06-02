@@ -347,3 +347,81 @@ ausrollen.
 - [ ] URL in `lecture/12_challenge.qmd` aktualisiert
 
 Wenn alle Häkchen sitzen, ist die Challenge live.
+
+---
+
+## Laufender Betrieb: Ist-Last-Daten für „Prognose vs. Ist-Last" nachziehen
+
+Das Leaderboard zeigt neben der Tabelle die interaktive Plotly-Grafik
+**„Prognose vs. Ist-Last"** (`scripts/charts.py` →
+`fig_forecast_vs_actual`): die 24-h-Prognose jedes Teams und die
+ENTSO-E-Day-ahead-Prognose als Baseline, jeweils gegen den tatsächlich
+gemessenen Netz-Ist-Load (*Actual Total Load* 6.1.A). Die **Ist-Last-Spur**
+stammt aus `data/actual_load.parquet` — einer **committeten** Zeitreihe,
+die der Pages-Build (`build_leaderboard.py`) **ohne API-Key** liest.
+
+**Warum ein lokaler Schritt?** Der `ENTSOE_API_KEY` steht als Repo-Secret
+nur dem `Daily Scoring`-Workflow zur Verfügung, **nicht** dem
+Build-/Deploy-Workflow (der bewusst keinen Key bekommt). `score_day.py`
+(CI) lädt den Ist-Load zwar, verwirft ihn aber nach der Metrik-Berechnung.
+Die Grafik braucht ihn jedoch **persistiert** — und dafür sorgt ein
+**lokaler** Lauf von `scripts/fetch_actuals.py` (gleiche, getestete
+Download-Logik wie das Scoring), dessen Ergebnis committet wird.
+
+> **Symptom, wenn dieser Schritt vergessen wird:** Tabelle und MAE springen
+> nach dem täglichen CI-Scoring auf den neuen Tag, aber die
+> „Prognose vs. Ist-Last"-Grafik bleibt am Vortag stehen — die committete
+> `data/actual_load.parquet` ist dann veraltet. Genau das war hier der
+> Grund; die ENTSO-E-Daten fehlten nicht, der lokale Refresh stand aus.
+
+**1. Ist-Load lokal nachziehen** (`ENTSOE_API_KEY` muss in der Umgebung
+gesetzt sein):
+
+```sh
+# Alle relevanten Tage (aus Submissions + Scores abgeleitet, <= heute UTC).
+# Bereits vollständige Tage werden übersprungen; der noch unfertige heutige
+# Tag wird automatisch aufgeschoben (ENTSO-E publiziert mit ein paar Stunden
+# Verzug):
+uv run python scripts/fetch_actuals.py
+
+# Alternativ ein gezieltes Datumsfenster:
+uv run python scripts/fetch_actuals.py --from 2026-06-01 --to 2026-06-01
+
+# Bereits vollständige Tage erzwungen neu laden:
+uv run python scripts/fetch_actuals.py --force
+```
+
+Kontrolle:
+
+```sh
+git status --short data/actual_load.parquet   # sollte als geändert auftauchen
+```
+
+**2. Commit + PR.** Der PR berührt keine `submissions/**`-Datei, daher
+nickt `validate-pr.yml` ihn pass-through ab; `auto-merge.yml` mergt ihn
+**bewusst nicht** automatisch — als Lehrende:r selbst (Admin) mergen:
+
+```sh
+# macOS:
+git switch -c data/actuals-$(date -u +%F)
+git add data/actual_load.parquet
+git commit -m "data: Ist-Load bis YYYY-MM-DD nachgezogen"
+git push -u origin HEAD
+gh pr create --fill --base main
+gh pr merge --squash --admin
+```
+
+**3. Redeploy** passiert automatisch: Sobald `data/actual_load.parquet`
+auf `main` landet, startet `build-and-deploy.yml` — die Datei steht in
+dessen `push`-`paths:`-Filter (neben `data/scores.parquet`, `teams.yml`,
+dem Template, `scripts/build_leaderboard.py` und `scripts/charts.py`).
+Zusätzlich re-rendert der `workflow_run`-Trigger die Seite nach jedem
+`Daily Scoring`-Lauf aus der committeten `actual_load.parquet`.
+
+Ein manueller Anstoß ist nur nötig, um **ohne neuen Commit** neu zu bauen
+(z. B. nach einem direkten Push an `main` ohne PR):
+
+```sh
+gh workflow run "Build & Deploy Leaderboard" --ref main
+gh run watch
+```
