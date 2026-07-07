@@ -181,11 +181,17 @@ teams:
     github_handles: [soheilayati, msteffge, erikbirkholz, hennioo]
     group: "AIT"
     certified: "No"
+    model_card_link: "https://github.com/SoheilAyati/Hot-Rod-Public/blob/main/model_cards"
+    software_link: "https://github.com/SoheilAyati/Hot-Rod-Public/releases/download/v4.5/voltcrown-v4.5.zip"
+    openssf: "https://scorecard.dev/viewer/?uri=github.com/SoheilAyati/Hot-Rod-Public"
   - id: hot_rod_entsoe
     display_name: "Hot Rod (ENTSO-E)"
     github_handles: [soheilayati, msteffge, erikbirkholz, hennioo]
     group: "AIT"
     certified: "No"
+    model_card_link: "https://github.com/SoheilAyati/Hot-Rod-Public/blob/main/model_cards"
+    software_link: "https://github.com/SoheilAyati/Hot-Rod-Public/releases/download/v4.5/voltcrown-v4.5.zip"
+    openssf: "https://scorecard.dev/viewer/?uri=github.com/SoheilAyati/Hot-Rod-Public"
   - id: ddkast
     display_name: "DDKAST"
     github_handles: [bachmak, KareemYassen, INDYROD]
