@@ -316,6 +316,7 @@ teams:
     group: "ING"
     certified: "No"
     joker: false
+    model_card_link: "https://github.com/bartzbeielstein/challenge-leaderboard/blob/main/submissions/team_weather_report/MODEL_CARD.md"
   - id: team_weather_report_entsoe
     about_models: false
     display_name: "Team Weather Report (ENTSO-E)"
