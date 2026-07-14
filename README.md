@@ -84,6 +84,36 @@ Nur Personen aus `github_handles` dürfen PRs für dieses Team mergen
   Energy System Models Using Better Load Forecasts*,
   [arXiv:2302.11017](https://arxiv.org/abs/2302.11017).
 
+### Joker-Regel
+
+Jedes Team darf während der gesamten Challenge **genau einen Joker**
+einsetzen: Die Prognose-CSV EINES bereits eingereichten und bereits
+bewerteten Zieltages wird durch eine aktualisierte Prognose ersetzt;
+der Tag wird anschließend gegen die committeten Ist-Werte
+(`data/actual_load.parquet`) neu bewertet — kein frischer
+ENTSO-E-Abruf, keine Änderung an anderen Tagen oder Teams.
+
+- *Buchführung* in `teams.yml`, Schlüssel `joker`: fehlt oder `false`
+  = Joker verfügbar; nach Einsatz das ISO-Datum des ersetzten
+  Zieltages (z. B. `joker: "2026-06-22"`). Der Joker gilt je
+  Registry-Eintrag; der `_entsoe`-Geschwister-Eintrag behält seinen
+  eigenen.
+- Ein Joker legt **nie** einen neuen Submissions-Tag an — er
+  überschreibt ausschließlich eine vorhandene Datei
+  `submissions/<team>/<datum>.csv`. Die Ersatz-CSV muss dieselben
+  Schema-Checks bestehen wie eine reguläre Submission.
+- *Anwendung durch die Lehrenden* (nach Eingang der Joker-Mail):
+  Ersatzdatei unter `joker/<team>/<datum>.csv` ablegen, dann
+  `uv run python scripts/apply_joker.py --team <id> --date <datum>`
+  und anschließend `scripts/build_leaderboard.py`. Das Skript setzt
+  den `joker`-Schlüssel selbst und bewertet chirurgisch nur diesen
+  einen (team, tag)-Score neu. Ein Joker-PR scheitert absichtlich am
+  Deadline-Gate (`validate-pr.yml`) und wird admin-gemerged — das Gate
+  selbst bleibt unangetastet.
+- Exit-Code-Erweiterung: `4` = Joker-Regel verletzt (bereits
+  eingesetzt, kein existierender Zieltag, Zieltag nicht bewertet),
+  `5` = committete Ist-Werte des Tages unvollständig.
+
 ### Pseudo-Team ENTSO-E
 
 Die offizielle ENTSO-E-Day-ahead-Prognose nimmt als **Pseudo-Team**
