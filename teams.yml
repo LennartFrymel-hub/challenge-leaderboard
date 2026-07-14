@@ -69,7 +69,7 @@ teams:
     display_name: "Syntaxerror"
     github_handles: [lriethk, timhaeger,linus-thk]
     group: "ING"
-    certified: "No"
+    certified: "Yes"   # Reproduktions-Zertifikat von Das A Team, Review 2026-07-09
     joker: false
     model_card_link: "https://github.com/linus-thk/syntaxerror-prognose/blob/main/MODEL_CARD.md"
     software_link: "https://github.com/linus-thk/syntaxerror-prognose/archive/refs/heads/main.zip"
