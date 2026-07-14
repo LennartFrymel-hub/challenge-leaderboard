@@ -297,8 +297,9 @@ teams:
     display_name: "Team ImmerZuSpaet"
     github_handles: [LennartFrymel-hub, abdulwahabtibi1989-hub, MSamed, fan20251230, steinbrechm]
     group: "ING"
-    certified: "No"
+    certified: "Yes"   # Reproduktions-Zertifikat von Voltrion, Review 2026-07-09
     model_card_link: "https://github.com/LennartFrymel-hub/forecast/blob/main/MODEL_CARD.md"
+    software_link: "https://github.com/LennartFrymel-hub/forecast/archive/refs/heads/main.zip"
     openssf: "https://scorecard.dev/viewer/?uri=github.com/LennartFrymel-hub/forecast"
     joker: false
   - id: team_immerzuspaet_entsoe
