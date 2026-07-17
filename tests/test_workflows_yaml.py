@@ -127,10 +127,15 @@ def test_validate_pr_is_not_pull_request_target():
     assert "pull_request_target" not in on
 
 
-def test_validate_pr_counts_only_new_submission_files():
+def test_validate_pr_validates_added_and_modified_submissions():
+    # --diff-filter=AM (not just A): modifying an existing submission must
+    # ALSO run the validator. With plain A a re-submit via overwrite skips
+    # schema/deadline/authorship entirely (the eigen_squad 2026-07-15
+    # August-timestamp regression, PR #1067 -> fix #1095).
     body = (WF / "validate-pr.yml").read_text()
-    assert "--diff-filter=A" in body
-    assert "genau eine neue Submission hinzufügen" in body
+    assert "--diff-filter=AM" in body
+    assert "--diff-filter=A " not in body, "plain -A leaves the modify hole open"
+    assert "genau eine Submission hinzufügen oder ändern" in body
 
 
 def test_ci_workflow_runs_pytest_and_actionlint():
