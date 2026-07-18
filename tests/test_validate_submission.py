@@ -123,3 +123,51 @@ def test_authorship_rejects_retired_team(teams_yml):
     with pytest.raises(SystemExit) as ei:
         vs.validate_authorship("old_team", "bartzbeielstein", teams)
     assert ei.value.code == 3
+
+
+def test_deadline_exceptions_missing_file_is_empty(tmp_path):
+    from challenge_leaderboard import validation as _v
+    assert _v.load_deadline_exceptions(tmp_path / "nope.yml") == set()
+
+
+def test_deadline_exceptions_loads_pairs(tmp_path):
+    from challenge_leaderboard import validation as _v
+    p = tmp_path / "deadline_exceptions.yml"
+    p.write_text(
+        "- team_id: team_4_xgb\n"
+        "  target_date: \"2026-07-19\"\n"
+        "  reason: covariate-upgrade night\n"
+    )
+    assert _v.load_deadline_exceptions(p) == {("team_4_xgb", "2026-07-19")}
+
+
+def test_deadline_exception_bypasses_cutoff(tmp_path):
+    """A listed (team, date) pair passes validate_submission_file after the
+    cutoff; an unlisted team on the same day is still rejected with code 2."""
+    from challenge_leaderboard import validation as _v
+
+    stamps = pd.date_range("2020-01-02T00:00:00Z", periods=24, freq="h",
+                            tz="UTC").strftime("%Y-%m-%dT%H:%M:%SZ")
+    df = pd.DataFrame({"timestamp_utc": stamps,
+                       "forecast_mw": [1000.0] * 24})
+    (tmp_path / "deadline_exceptions.yml").write_text(
+        "- team_id: team_4_xgb\n"
+        "  target_date: \"2020-01-02\"\n"
+        "  reason: test\n"
+    )
+    teams_yml = tmp_path / "teams.yml"
+    teams_yml.write_text("teams: []\n")
+
+    for team, ok in (("team_4_xgb", True), ("team_4", False)):
+        rel = f"submissions/{team}/2020-01-02.csv"
+        csv = tmp_path / rel
+        csv.parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(csv, index=False)
+        if ok:
+            # 2020 target: cutoff long past — only the exception lets it pass.
+            _v.validate_submission_file(rel, csv_path=csv, teams_yml=teams_yml)
+        else:
+            with pytest.raises(_v.SubmissionInvalid) as ei:
+                _v.validate_submission_file(rel, csv_path=csv,
+                                            teams_yml=teams_yml)
+            assert ei.value.code == 2

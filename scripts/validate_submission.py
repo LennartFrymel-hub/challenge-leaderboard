@@ -97,7 +97,14 @@ def main() -> None:
     team_id, target_date = parse_path(rel)
     validate_schema(Path(rel), target_date)
     if not args.skip_deadline:
-        validate_deadline(target_date)
+        exceptions = _v.load_deadline_exceptions(
+            Path(args.teams).parent / "deadline_exceptions.yml"
+        )
+        if (team_id, target_date) in exceptions:
+            print(f"deadline exception granted for team={team_id} "
+                  f"target_date={target_date} (deadline_exceptions.yml)")
+        else:
+            validate_deadline(target_date)
     if args.pr_author:
         teams = load_teams(Path(args.teams))
         validate_authorship(team_id, args.pr_author, teams)

@@ -117,6 +117,29 @@ def validate_schema(csv_path: Path, target_date: str) -> None:
         )
 
 
+def load_deadline_exceptions(
+    exceptions_yml: Path | None = None,
+) -> set[tuple[str, str]]:
+    """Return the ``(team_id, target_date)`` pairs granted a one-off deadline exception.
+
+    Reads ``deadline_exceptions.yml`` (repo root, next to ``teams.yml``) —
+    a list of ``{team_id, target_date, reason}`` entries granted explicitly
+    by the challenge owner. A missing or empty file yields an empty set, so
+    the deadline rule applies unchanged in the normal case.
+    """
+    import yaml  # noqa: PLC0415 — keep module import surface unchanged
+
+    p = Path(exceptions_yml) if exceptions_yml else Path("deadline_exceptions.yml")
+    if not p.exists():
+        return set()
+    entries = yaml.safe_load(p.read_text()) or []
+    return {
+        (str(e["team_id"]), str(e["target_date"]))
+        for e in entries
+        if isinstance(e, dict) and "team_id" in e and "target_date" in e
+    }
+
+
 def validate_deadline(
     target_date: str, now_utc: datetime | None = None
 ) -> None:
@@ -199,7 +222,11 @@ def validate_submission_file(
     team_id, target_date = parse_path(repo_relative)
     validate_schema(csv_path or Path(repo_relative), target_date)
     if not skip_deadline:
-        validate_deadline(target_date)
+        exceptions_yml = (
+            teams_yml.parent / "deadline_exceptions.yml" if teams_yml else None
+        )
+        if (team_id, target_date) not in load_deadline_exceptions(exceptions_yml):
+            validate_deadline(target_date)
     if pr_author:
         if teams_yml is None:
             raise ValueError("teams_yml must be provided when pr_author is given")
