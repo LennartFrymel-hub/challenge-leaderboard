@@ -239,9 +239,9 @@ teams:
     display_name: "Hot Rod"
     github_handles: [soheilayati, msteffge, erikbirkholz, hennioo]
     group: "AIT"
-    certified: "No"
+    certified: "Yes"   # Reproduktions-Zertifikat von DDKAST, Review 2026-07-18
     model_card_link: "https://github.com/SoheilAyati/Hot-Rod-Public/blob/main/model_cards"
-    software_link: "https://github.com/SoheilAyati/Hot-Rod-Public/releases/download/v4.5/voltcrown-v4.5.zip"
+    software_link: "https://github.com/SoheilAyati/Hot-Rod-Public/releases/download/v7.11/voltcrown-v7.11.zip"
     openssf: "https://scorecard.dev/viewer/?uri=github.com/SoheilAyati/Hot-Rod-Public"
     joker: false
   - id: hot_rod_entsoe
@@ -251,7 +251,7 @@ teams:
     group: "AIT"
     certified: "No"
     model_card_link: "https://github.com/SoheilAyati/Hot-Rod-Public/blob/main/model_cards"
-    software_link: "https://github.com/SoheilAyati/Hot-Rod-Public/releases/download/v4.5/voltcrown-v4.5.zip"
+    software_link: "https://github.com/SoheilAyati/Hot-Rod-Public/releases/download/v7.11/voltcrown-v7.11.zip"
     openssf: "https://scorecard.dev/viewer/?uri=github.com/SoheilAyati/Hot-Rod-Public"
     joker: false
   - id: ddkast
