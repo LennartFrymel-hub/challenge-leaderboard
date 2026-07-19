@@ -118,6 +118,7 @@ teams:
     software_link: "https://github.com/akievi/challenge-leaderboard/releases/download/repro-team_fabinalii-2026-06-27/team_fabinalii-repro-2026-06-27.zip"
     openssf: "https://scorecard.dev/viewer/?uri=github.com/sequential-parameter-optimization/spotforecast2-safe"
   - id: team_4
+    about_models: false   # Veranstalter-Referenzmodell, nur Performance-Vergleich
     display_name: "spotoptim lgbm"
     github_handles: [bartzbeielstein]
     model_card_link: "https://github.com/sequential-parameter-optimization/spotforecast2-safe/blob/main/MODEL_CARD.md"
@@ -128,18 +129,21 @@ teams:
     openssf: "https://scorecard.dev/viewer/?uri=github.com/sequential-parameter-optimization/spotforecast2-safe"
     retired: false   # ab 2026-06-15  reaktiviert
   - id: chronos
+    about_models: false   # Veranstalter-Referenzmodell, nur Performance-Vergleich
     display_name: "chronos"
     github_handles: [bartzbeielstein]
     group: "--"
     certified: "No"
     joker: false
   - id: macl2l
+    about_models: false   # Veranstalter-Referenzmodell, nur Performance-Vergleich
     display_name: "MACL2L"
     github_handles: [bartzbeielstein]
     group: "--"
     certified: "No"
     joker: false
   - id: macl2l_entsoe
+    about_models: false   # Veranstalter-Referenzmodell, nur Performance-Vergleich
     display_name: "MACL2L (ENTSO-E)"
     github_handles: [bartzbeielstein]
     group: "--"
@@ -179,6 +183,7 @@ teams:
     retired: true   # ab 2026-06-19 aus Live-Wertung genommen
     joker: false
   - id: team_4_optuna
+    about_models: false   # Veranstalter-Referenzmodell, nur Performance-Vergleich
     display_name: "optuna lgbm"
     github_handles: [bartzbeielstein]
     model_card_link: "https://github.com/sequential-parameter-optimization/spotforecast2-safe/blob/main/MODEL_CARD.md"
@@ -186,6 +191,7 @@ teams:
     certified: "No"
     joker: false
   - id: team_4_xgb
+    about_models: false   # Veranstalter-Referenzmodell, nur Performance-Vergleich
     display_name: "spotoptim xgb"
     github_handles: [bartzbeielstein]
     model_card_link: "https://github.com/sequential-parameter-optimization/spotforecast2-safe/blob/main/MODEL_CARD.md"
@@ -193,6 +199,7 @@ teams:
     certified: "No"
     joker: false
   - id: team_4_catboost
+    about_models: false   # Veranstalter-Referenzmodell, nur Performance-Vergleich
     display_name: "spotoptim catboost"
     github_handles: [bartzbeielstein]
     model_card_link: "https://github.com/sequential-parameter-optimization/spotforecast2-safe/blob/main/MODEL_CARD.md"
@@ -200,6 +207,7 @@ teams:
     certified: "No"
     joker: false
   - id: team_4_causal
+    about_models: false   # Veranstalter-Referenzmodell, nur Performance-Vergleich
     display_name: "spotoptim causal"
     github_handles: [bartzbeielstein]
     model_card_link: "https://github.com/sequential-parameter-optimization/spotforecast2-safe/blob/main/MODEL_CARD.md"
