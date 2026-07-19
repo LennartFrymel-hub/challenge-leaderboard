@@ -64,15 +64,21 @@ teams:
     display_name: "Das A Team"
     github_handles: [obecher,Math1s0,JannhTH,MarkDT551,Kradid655]
     group: "ING"
-    certified: "No"
+    certified: "Yes"   # Reproduktions-Zertifikat von Team Fabinalii, Review 2026-07-08
     joker: false
+    model_card_link: "https://github.com/Math1s0/numerische-mathematik-th-koeln/blob/main/numerik_ordner/MODEL_CARD.md"
+    software_link: "https://downgit.github.io/#/home?url=https://github.com/Math1s0/numerische-mathematik-th-koeln/tree/main/numerik_ordner"
+    openssf: "https://scorecard.dev/viewer/?uri=github.com/Math1s0/numerische-mathematik-th-koeln"
   - id: a_team_entsoe
     about_models: false
     display_name: "Das A Team (ENTSO-E)"
     github_handles: [obecher,Math1s0,JannhTH,MarkDT551,Kradid655]
-    group: "ING" 
-    certified: "No" 
+    group: "ING"
+    certified: "No"
     joker: false
+    model_card_link: "https://github.com/Math1s0/numerische-mathematik-th-koeln/blob/main/numerik_ordner/MODEL_CARD.md"
+    software_link: "https://downgit.github.io/#/home?url=https://github.com/Math1s0/numerische-mathematik-th-koeln/tree/main/numerik_ordner"
+    openssf: "https://scorecard.dev/viewer/?uri=github.com/Math1s0/numerische-mathematik-th-koeln"
   - id: syntaxerror
     display_name: "Syntaxerror"
     github_handles: [lriethk, timhaeger,linus-thk]
